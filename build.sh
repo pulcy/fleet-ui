@@ -36,4 +36,4 @@ else
     cp tmp/fleet-v${FLEET_VERSION}-linux-amd64/fleetctl tmp/
 fi
 
-#docker build -t purpleworks/fleet-ui:$DOCKER_IMAGE_VERSION .
+docker build -t schneidexe/fleet-ui:$DOCKER_IMAGE_VERSION .
