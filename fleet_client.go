@@ -5,7 +5,7 @@ type UnitStatus struct {
 }
 
 type MachineStatus struct {
-	Machine, IPAddress, Metadata string
+	Machine, IPAddress, HostName, Metadata string
 }
 
 type Status struct {

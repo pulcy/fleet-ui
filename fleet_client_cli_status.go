@@ -7,6 +7,8 @@ import (
 	"io"
 	"os/exec"
 	"strings"
+	"net"
+	"log"
 )
 
 func (this *ClientCLI) StatusAll() ([]UnitStatus, error) {
@@ -117,6 +119,16 @@ func (this *ClientCLI) MachineAll() ([]MachineStatus, error) {
 	return parseMachineStatusOutput(stdout)
 }
 
+func getHostname(ip string) string {
+	hostname, err := net.LookupAddr(ip)
+	if err != nil {
+		log.Print("error resolving hostname for ip ", ip, ": ", err)
+		return ""
+	}
+	host := strings.Split(hostname[0], ".")
+	return (host[0])
+}
+
 func parseMachineStatusOutput(output string) ([]MachineStatus, error) {
 	result := make([]MachineStatus, 0)
 
@@ -134,6 +146,7 @@ func parseMachineStatusOutput(output string) ([]MachineStatus, error) {
 		unitStatus := MachineStatus{
 			Machine:   words[0],
 			IPAddress: words[1],
+			HostName:  getHostname(words[1]),
 			Metadata:  words[2],
 		}
 		result = append(result, unitStatus)

@@ -14,7 +14,7 @@
   <li class="machine" ng-repeat="machine in machine.items | orderBy:'IPAddress'">
     <div class="machine-info">
       <div class="machine-ip">
-        <i class="fa fa-sitemap"></i> {{ machine.IPAddress }}
+        <i class="fa fa-sitemap"></i> {{ machine.IPAddress }} <span ng-if="machine.HostName">({{ machine.HostName }})</span>
       </div>
       <div class="machine-desc">
         <div class="machine-name">
@@ -30,9 +30,9 @@
         <li class="unit" ng-repeat="unit in unit.items[machine.Machine] | filter:filterText | orderBy:'Unit'">
           <span class="unit-info">
             <a ui-sref="root.main.unit({ name: unit.Unit })">
-              <span class="label label-{{ unit.Sub }}">{{ unit.Sub }}</span>
-              {{ unit.Unit | serviceName }}
-            </a>
+            <span class="label label-{{ unit.Sub }}">{{ unit.Sub }}</span>
+            {{ unit.Unit | serviceName }}
+          </a>
             <a ng-if="(unit.Unit|serviceInstance)" class="fa fa-link pull-right" target="_blank"
                href="http://{{ machine.IPAddress }}:{{ unit.Unit | serviceInstance }}"></a>
           </span>
