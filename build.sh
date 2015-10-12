@@ -1,12 +1,18 @@
 #!/bin/sh
 set -e
 
+OS=`uname -o`
+OS=linux
 FLEET_VERSION=0.10.2
 DOCKER_IMAGE_VERSION=${1:-"latest"}
 
 # echo
-echo "FLEET VERSION - "$FLEET_VERSION
-echo "BUILD DOCKER IMAGE VERSION - "$DOCKER_IMAGE_VERSION
+echo "OS - ${OS}"
+echo "FLEET VERSION - ${FLEET_VERSION}"
+echo "BUILD DOCKER IMAGE VERSION - ${DOCKER_IMAGE_VERSION}"
+
+# install compass if not present
+compass -v || (echo "Installing compass ruby gem..." && sudo gem install compass)
 
 # build angular
 cd angular
@@ -19,7 +25,15 @@ cd ..
 go get -v
 go install
 cp $GOPATH/bin/fleet-ui tmp/
-curl -s -L https://github.com/coreos/fleet/releases/download/v${FLEET_VERSION}/fleet-v${FLEET_VERSION}-linux-amd64.tar.gz | \
-  tar xz fleet-v${FLEET_VERSION}-linux-amd64/fleetctl -O > tmp/fleetctl
-chmod +x tmp/fleetctl
-docker build -t purpleworks/fleet-ui:$DOCKER_IMAGE_VERSION .
+
+if [ ${OS} == "Darwin" ]; then
+    curl -L https://github.com/coreos/fleet/releases/download/v${FLEET_VERSION}/fleet-v${FLEET_VERSION}-darwin-amd64.zip > tmp/fleet-v${FLEET_VERSION}-darwin-amd64.zip && \
+        unzip tmp/fleet-v${FLEET_VERSION}-darwin-amd64.zip && \
+        rm tmp/fleet-v${FLEET_VERSION}-darwin-amd64.zip
+        cp tmp/fleet-v${FLEET_VERSION}-darwin-amd64/fleetctl tmp/
+else
+    curl -L https://github.com/coreos/fleet/releases/download/v${FLEET_VERSION}/fleet-v${FLEET_VERSION}-linux-amd64.tar.gz | tar xz -C tmp/
+    cp tmp/fleet-v${FLEET_VERSION}-linux-amd64/fleetctl tmp/
+fi
+
+#docker build -t purpleworks/fleet-ui:$DOCKER_IMAGE_VERSION .
