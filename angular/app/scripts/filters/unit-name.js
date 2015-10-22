@@ -9,10 +9,11 @@
  * Filter in the fleetuiApp.
  */
 angular.module('fleetuiApp')
-  .filter('serviceName', function () {
+  .filter('unitName', function () {
+    var unitTypes = /(.+)\.(service|socket|device|mount|automount|timer|path)$/;
     return function (input) {
       if(input) {
-        return input.substring(0, input.lastIndexOf('.service'));
+        return input.match(unitTypes) ? input.match(unitTypes)[1] : null;
       } else {
         return null;
       }
