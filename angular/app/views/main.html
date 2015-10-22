@@ -31,9 +31,11 @@
           <span class="unit-info">
             <span class="label label-{{ unit.Sub }}">{{ unit.Sub }}</span>
             {{ unit.Unit | unitName }}
-            <a ui-sref="root.main.unit({ name: unit.Unit })" class="fa fa-cog pull-right"></a>
+            <a ui-sref="root.main.unit({ name: unit.Unit })" class="fa fa-cog pull-right"
+               title="Controls"></a>
             <a ng-if="(unit.Unit | unitInstance)" class="fa fa-link pull-right" target="_blank"
-               href="http://{{ machine.IPAddress }}:{{ unit.Unit | unitInstance }}"></a>
+               href="http://{{ machine.IPAddress }}:{{ unit.Unit | unitInstance }}"
+               title="Open in new window"></a>
           </span>
         </li>
       </ul>
