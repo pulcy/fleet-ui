@@ -29,10 +29,9 @@
       <ul class="unit-list unstyled clearfix">
         <li class="unit" ng-repeat="unit in unit.items[machine.Machine] | filter:filterText | orderBy:'Unit'">
           <span class="unit-info">
-            <a ui-sref="root.main.unit({ name: unit.Unit })">
             <span class="label label-{{ unit.Sub }}">{{ unit.Sub }}</span>
             {{ unit.Unit | serviceName }}
-          </a>
+            <a ui-sref="root.main.unit({ name: unit.Unit })" class="fa fa-cog pull-right"></a>
             <a ng-if="(unit.Unit|serviceInstance)" class="fa fa-link pull-right" target="_blank"
                href="http://{{ machine.IPAddress }}:{{ unit.Unit | serviceInstance }}"></a>
           </span>
