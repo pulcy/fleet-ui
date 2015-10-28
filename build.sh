@@ -3,7 +3,7 @@ set -e
 
 OS=`uname -o`
 OS=linux
-FLEET_VERSION=0.10.2
+FLEET_VERSION=0.11.5
 DOCKER_IMAGE_VERSION=${1:-"latest"}
 
 # echo
