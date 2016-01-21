@@ -1,10 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 OS=`uname -o`
 OS=linux
 FLEET_VERSION=0.11.5
 DOCKER_IMAGE_VERSION=${1:-"latest"}
+export GOBIN=$GOPATH/bin
 
 # echo
 echo "OS - ${OS}"
@@ -18,22 +19,15 @@ compass -v || (echo "Installing compass ruby gem..." && sudo gem install compass
 cd angular
 npm install
 node_modules/bower/bin/bower install
-node_modules/grunt-cli/bin/grunt build
+node_modules/grunt-cli/bin/grunt build --force
 cd ..
 
 # build go app
 go get -v
 go install
-cp $GOPATH/bin/fleet-ui tmp/
+cp $GOPATH/bin/fleeui tmp/fleet-ui
 
-if [ ${OS} == "Darwin" ]; then
-    curl -L https://github.com/coreos/fleet/releases/download/v${FLEET_VERSION}/fleet-v${FLEET_VERSION}-darwin-amd64.zip > tmp/fleet-v${FLEET_VERSION}-darwin-amd64.zip && \
-        unzip tmp/fleet-v${FLEET_VERSION}-darwin-amd64.zip && \
-        rm tmp/fleet-v${FLEET_VERSION}-darwin-amd64.zip
-        cp tmp/fleet-v${FLEET_VERSION}-darwin-amd64/fleetctl tmp/
-else
-    curl -L https://github.com/coreos/fleet/releases/download/v${FLEET_VERSION}/fleet-v${FLEET_VERSION}-linux-amd64.tar.gz | tar xz -C tmp/
-    cp tmp/fleet-v${FLEET_VERSION}-linux-amd64/fleetctl tmp/
-fi
+curl -L https://github.com/coreos/fleet/releases/download/v${FLEET_VERSION}/fleet-v${FLEET_VERSION}-linux-amd64.tar.gz | tar xz -C tmp/
+cp tmp/fleet-v${FLEET_VERSION}-linux-amd64/fleetctl tmp/
 
-docker build -t schneidexe/fleet-ui:$DOCKER_IMAGE_VERSION .
+docker build -t hub.crisidev.org:5000/crisidev/fleetui:$DOCKER_IMAGE_VERSION .
