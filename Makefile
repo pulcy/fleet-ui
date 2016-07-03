@@ -30,10 +30,13 @@ SOURCES := $(shell find $(SRCDIR) -name '*.go')
 
 .PHONY: all clean deps docker
 
-all: $(BIN)
+all: angular/dist $(BIN) 
 
 clean:
-	rm -Rf $(BIN) $(GOBUILDDIR)
+	rm -Rf $(BIN) $(GOBUILDDIR) angular/dist angular/npm-debug.log
+
+veryclean: clean
+		rm -Rf angular/node_modules angular/bower_components angular/.tmp
 
 deps:
 	@${MAKE} -B -s $(GOBUILDDIR)
@@ -54,3 +57,12 @@ $(BIN): $(GOBUILDDIR) $(SOURCES)
 		-w /usr/code/ \
 		golang:$(GOVERSION) \
 		go build -a -installsuffix netgo -tags netgo -ldflags "-X main.projectVersion=$(VERSION) -X main.projectBuild=$(COMMIT)" -o /usr/code/$(PROJECT) $(REPOPATH)
+
+angular/dist:
+	docker build angular -t fleet-ui-angular-build -f angular/Dockerfile.build
+	docker run \
+		--rm \
+		-v $(ROOTDIR)/angular:/usr/code \
+		-w /usr/code/ \
+		fleet-ui-angular-build \
+		/usr/code/build.sh

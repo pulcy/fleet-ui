@@ -1,0 +1,4 @@
+FROM node:6.2-slim
+
+RUN npm install -g grunt-cli
+RUN apt-get update && apt-get install -y git bzip2
