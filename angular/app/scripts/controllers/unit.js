@@ -101,11 +101,11 @@ angular.module('fleetuiApp')
     if($location.protocol() == 'https') {
       wsprotocol = 'wss://'
     }
-    
+
     if(ENVIRONMENT == 'dev') {
-      WebSocket.new(wsprotocol + $location.host() + ':3000' + '/ws/journal/' + unitName);
+      WebSocket.new(wsprotocol + $location.host() + ':3000' + '/fleet/ws/journal/' + unitName);
     } else {
-      WebSocket.new(wsprotocol + $location.host() + ':' + $location.port() + '/ws/journal/' + unitName);
+      WebSocket.new(wsprotocol + $location.host() + ':' + $location.port() + '/fleet/ws/journal/' + unitName);
     }
     setCallback();
     $scope.$on('$destroy', function () {
