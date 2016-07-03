@@ -2,3 +2,7 @@ FROM node:6.2-slim
 
 RUN npm install -g grunt-cli
 RUN apt-get update && apt-get install -y git bzip2
+
+RUN apt-get install -y ruby ruby-dev libffi-dev
+RUN apt-get install -y build-essential
+RUN gem install compass

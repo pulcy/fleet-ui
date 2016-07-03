@@ -6,6 +6,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"gopkg.in/unrolled/render.v1"
+	"net/http"
 	"os"
 )
 
@@ -16,7 +17,9 @@ var (
 	etcdPeer     string
 	etcdPeerFlag = flag.String("etcd-peer", "172.17.42.1", "ETCD_PEER")
 	bind         string
-	bindFlag = flag.String("bind", "0.0.0.0:3000", "BIND")
+	bindFlag     = flag.String("bind", "0.0.0.0:3000", "BIND")
+	prefix       string
+	prefixFlag   = flag.String("prefix", "/fleet", "URL prefix")
 )
 
 func init() {
@@ -32,6 +35,7 @@ func init() {
 	} else {
 		bind = *bindFlag
 	}
+	prefix = *prefixFlag
 
 	// init global variables
 	renderer = render.New(render.Options{})
@@ -44,6 +48,10 @@ func init() {
 
 func main() {
 	r := mux.NewRouter().StrictSlash(false)
+	if prefix != "" {
+		fmt.Printf("Using prefix '%s'\n", prefix)
+		r = r.PathPrefix(prefix).Subrouter()
+	}
 
 	api := r.PathPrefix("/api/v1").Subrouter()
 
@@ -68,7 +76,9 @@ func main() {
 	// routing websocket
 	r.Path("/ws/journal/{id}").HandlerFunc(wsHandler)
 
-	n := negroni.Classic()
+	static := negroni.NewStatic(http.Dir("public"))
+	static.Prefix = prefix
+	n := negroni.New(negroni.NewRecovery(), negroni.NewLogger(), static)
 	n.UseHandler(r)
 
 	n.Run(bind)

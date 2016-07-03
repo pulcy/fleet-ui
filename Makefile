@@ -30,13 +30,13 @@ SOURCES := $(shell find $(SRCDIR) -name '*.go')
 
 .PHONY: all clean deps docker
 
-all: angular/dist $(BIN) 
+all: angular/dist $(BIN)
 
 clean:
 	rm -Rf $(BIN) $(GOBUILDDIR) angular/dist angular/npm-debug.log
 
 veryclean: clean
-		rm -Rf angular/node_modules angular/bower_components angular/.tmp
+		rm -Rf angular/node_modules angular/bower_components angular/.tmp angular/.sass-cache
 
 deps:
 	@${MAKE} -B -s $(GOBUILDDIR)
