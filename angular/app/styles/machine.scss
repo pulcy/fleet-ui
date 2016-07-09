@@ -6,6 +6,9 @@
   list-style: none;
   margin: 0;
   padding: 20px 10px;
+  @media screen and (max-width: 449px) {
+      padding: 0;
+  }
 
   li.machine {
     display: inline-block;
@@ -13,6 +16,10 @@
     margin-bottom: 20px;
     position: relative;
     vertical-align: top;
+    @media screen and (max-width: 449px) {
+        width: 100%;
+        padding: 0;
+    }
 
     &.ng-enter {
       animation: fadeIn .5s;
@@ -22,6 +29,9 @@
       @include long-text();
       background-color: #fff;
       width: 450px;
+      @media screen and (max-width: 449px) {
+          width: 100%;
+      }
 
       .machine-desc {
         padding: 10px;
